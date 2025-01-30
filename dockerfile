@@ -1,5 +1,5 @@
 # Etapa 1: Construir a aplicação com Maven e OpenJDK 23
-FROM maven:3.8.6-openjdk-17-slim AS build
+FROM maven:3.9.6-eclipse-temurin-17-slim AS build
 
 # Instalar OpenJDK 23
 RUN apt-get update && apt-get install -y openjdk-23-jdk
