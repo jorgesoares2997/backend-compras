@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: 'mysql:8.0' # Versão específica para evitar problemas
+    container_name: mysql_db
+    environment:
+      MYSQL_DATABASE: courses
+      MYSQL_ROOT_PASSWORD: verysecret
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: secret
+    ports:
+      - '3306:3306'
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 20s
+
+  api:
+    build: .
+    container_name: spring_api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/courses
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: secret
+    ports:
+      - '8080:8080'
+    restart: always
+
+volumes:
+  mysql_data:

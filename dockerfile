@@ -1,18 +1,15 @@
-# Etapa 1: Construir a aplicação com Maven e OpenJDK 23
+# Etapa 1: Construir a aplicação com Maven
 FROM maven:3.9.6-eclipse-temurin-17 AS build
-
-# Instalar OpenJDK 23
-RUN apt-get update && apt-get install -y openjdk-17-jdk
 
 WORKDIR /app
 
 # Copiar os arquivos do projeto para o contêiner
 COPY . .
 
-# Rodar o build Maven dentro do contêiner com OpenJDK 23
-RUN mvn clean install -DskipTests
+# Rodar o build Maven dentro do contêiner
+RUN mvn clean package -DskipTests
 
-# Etapa 2: Rodar a aplicação com OpenJDK 23
+# Etapa 2: Rodar a aplicação com OpenJDK
 FROM openjdk:17-slim
 
 WORKDIR /app
