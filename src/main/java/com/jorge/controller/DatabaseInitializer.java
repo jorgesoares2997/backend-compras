@@ -17,7 +17,7 @@ public class DatabaseInitializer {
         return args -> {
 
             // Verifica se já existem cursos, e só insere se estiver vazio
-            if (courseRepository.count() == 0) {
+            if (courseRepository.count() <= 3) {
                 Course course1 = new Course();
                 course1.setTitle("Smartphone Pro");
                 course1.setSubtitle("Celular de última geração");
