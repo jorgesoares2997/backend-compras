@@ -1,17 +1,16 @@
-# Usando a imagem oficial do Java
+FROM ubuntu:latest AS build
+
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . . 
+
+RUN apt-get install maven -y
+RUN mvn clean install
+
 FROM openjdk:17-jdk-slim
 
-# Definir diretório de trabalho
-WORKDIR /app
-
-# Copiar os arquivos do projeto para o contêiner
-COPY . .
-
-# Construir o projeto (caso esteja usando Maven)
-RUN ./mvnw clean install -DskipTests
-
-# Expor a porta da aplicação
 EXPOSE 8080
 
-# Rodar a aplicação
-CMD ["java", "-jar", "target/crud-spring-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /target/crud-spring-0.0.1-SNAPSHOT.jar app.jar
+
+ENTRYPOINT [ "java", "jar", "app.jar" ]
