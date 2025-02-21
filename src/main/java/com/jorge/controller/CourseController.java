@@ -20,7 +20,7 @@ import com.jorge.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@CrossOrigin(origins = "*")
+
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
@@ -48,21 +48,22 @@ public class CourseController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course) {
-      return courseRepository.findById(id)
-          .map(recordFound -> {
-              recordFound.setTitle(course.getTitle());
-              recordFound.setSubtitle(course.getSubtitle());
-              recordFound.setLocal(course.getLocal());
-              recordFound.setImage(course.getImage());
-              recordFound.setPrice(course.getPrice());
-              recordFound.setUrgency(course.getUrgency());
-              recordFound.setLink(course.getLink());
+    return courseRepository.findById(id)
+        .map(recordFound -> {
+          recordFound.setTitle(course.getTitle());
+          recordFound.setSubtitle(course.getSubtitle());
+          recordFound.setLocal(course.getLocal());
+          recordFound.setImage(course.getImage());
+          recordFound.setPrice(course.getPrice());
+          recordFound.setUrgency(course.getUrgency());
+          recordFound.setLink(course.getLink());
 
-              Course updated = courseRepository.save(recordFound);
-              return ResponseEntity.ok().body(updated);
-          })
-          .orElse(ResponseEntity.notFound().build());
+          Course updated = courseRepository.save(recordFound);
+          return ResponseEntity.ok().body(updated);
+        })
+        .orElse(ResponseEntity.notFound().build());
   }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     return courseRepository.findById(id)

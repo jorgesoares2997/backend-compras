@@ -14,10 +14,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**") // Aplica a todas as rotas que começam com /api/
-                        .allowedOrigins("http://localhost:3000") // Permite o frontend local
+                        .allowedOrigins("*") // Permite qualquer origem
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Permite esses métodos
                         .allowedHeaders("*") // Permite todos os headers
-                        .allowCredentials(true); // Permite credenciais (se necessário)
+                        .allowCredentials(false); // Desativado para evitar erro com '*' no allowedOrigins
             }
         };
     }
