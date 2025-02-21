@@ -20,7 +20,7 @@ import com.jorge.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
