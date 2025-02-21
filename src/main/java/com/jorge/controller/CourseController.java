@@ -22,18 +22,21 @@ import lombok.RequiredArgsConstructor;
 @RestController
 
 @RequestMapping("/api/courses")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class CourseController {
 
   private final CourseRepository courseRepository;
 
   @GetMapping
+  @CrossOrigin(origins = "*")
   public ResponseEntity<List<Course>> list() {
     List<Course> courses = courseRepository.findAll();
     return ResponseEntity.ok(courses);
   }
 
   @GetMapping("/{id}")
+  @CrossOrigin(origins = "*")
   public ResponseEntity<Course> findById(@PathVariable Long id) {
     return courseRepository.findById(id)
         .map(ResponseEntity::ok)
@@ -41,12 +44,14 @@ public class CourseController {
   }
 
   @PostMapping
+  @CrossOrigin(origins = "*")
   public ResponseEntity<Course> create(@RequestBody Course course) {
     Course savedCourse = courseRepository.save(course);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
   }
 
   @PutMapping("/{id}")
+  @CrossOrigin(origins = "*")
   public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course) {
     return courseRepository.findById(id)
         .map(recordFound -> {
@@ -65,6 +70,7 @@ public class CourseController {
   }
 
   @DeleteMapping("/{id}")
+  @CrossOrigin(origins = "*")
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     return courseRepository.findById(id)
         .map(recordFound -> {
