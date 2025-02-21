@@ -1,7 +1,6 @@
 package com.jorge.controller;
 
 import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,14 +12,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.jorge.model.Course;
 import com.jorge.repository.CourseRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @RestController
-
 @RequestMapping("/api/courses")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -45,14 +41,28 @@ public class CourseController {
 
   @PostMapping
   @CrossOrigin(origins = "*")
-  public ResponseEntity<Course> create(@RequestBody Course course) {
+  public ResponseEntity<?> create(@RequestBody Course course) {
+    if (course.getTitle() == null || course.getTitle().isEmpty()) {
+      return ResponseEntity.badRequest().body("Title cannot be null or empty");
+    }
+    if (course.getPrice() == null) {
+      return ResponseEntity.badRequest().body("Price cannot be null");
+    }
+    // Adicionar mais validações se necessário
     Course savedCourse = courseRepository.save(course);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
   }
 
   @PutMapping("/{id}")
   @CrossOrigin(origins = "*")
-  public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course) {
+  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Course course) {
+    if (course.getTitle() == null || course.getTitle().isEmpty()) {
+      return ResponseEntity.badRequest().body("Title cannot be null or empty");
+    }
+    if (course.getPrice() == null) {
+      return ResponseEntity.badRequest().body("Price cannot be null");
+    }
+
     return courseRepository.findById(id)
         .map(recordFound -> {
           recordFound.setTitle(course.getTitle());
@@ -78,6 +88,5 @@ public class CourseController {
           return ResponseEntity.noContent().<Void>build();
         })
         .orElse(ResponseEntity.notFound().build());
-
   }
 }

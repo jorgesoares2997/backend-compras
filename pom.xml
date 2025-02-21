@@ -60,6 +60,20 @@
       <optional>true</optional>
     </dependency>
 
+
+    <!-- Dependência para o Hibernate Validator -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.1.5.Final</version>
+    </dependency>
+
+    <!-- Dependência para o Bean Validation (dependência de execução) -->
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <version>3.0.0</version>
+    </dependency>
     <!-- Testes -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
