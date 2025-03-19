@@ -48,7 +48,6 @@ public class CourseController {
     if (course.getPrice() == null) {
       return ResponseEntity.badRequest().body("Price cannot be null");
     }
-    // Adicionar mais validações se necessário
     Course savedCourse = courseRepository.save(course);
     return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
   }
