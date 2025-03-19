@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.jorge.model.Course;
 import com.jorge.repository.CourseRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -54,14 +56,14 @@ public class CourseController {
 
   @PutMapping("/{id}")
   @CrossOrigin(origins = "*")
-  public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Course course) {
+  @Transactional
+  public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Course course) {
     if (course.getTitle() == null || course.getTitle().isEmpty()) {
       return ResponseEntity.badRequest().body("Title cannot be null or empty");
     }
     if (course.getPrice() == null) {
       return ResponseEntity.badRequest().body("Price cannot be null");
     }
-
     return courseRepository.findById(id)
         .map(recordFound -> {
           recordFound.setTitle(course.getTitle());
@@ -71,7 +73,6 @@ public class CourseController {
           recordFound.setPrice(course.getPrice());
           recordFound.setUrgency(course.getUrgency());
           recordFound.setLink(course.getLink());
-
           Course updated = courseRepository.save(recordFound);
           return ResponseEntity.ok().body(updated);
         })
@@ -80,7 +81,7 @@ public class CourseController {
 
   @DeleteMapping("/{id}")
   @CrossOrigin(origins = "*")
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
     return courseRepository.findById(id)
         .map(recordFound -> {
           courseRepository.deleteById(id);
