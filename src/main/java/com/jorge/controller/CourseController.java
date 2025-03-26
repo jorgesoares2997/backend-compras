@@ -17,6 +17,11 @@ import com.jorge.repository.CourseRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -28,13 +33,15 @@ public class CourseController {
 
   @GetMapping
   @CrossOrigin(origins = "*")
+  @Cacheable(value = "courses", key = "'all'")
   public ResponseEntity<List<Course>> list() {
-    List<Course> courses = courseRepository.findAll();
+    List<Course> courses = courseRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     return ResponseEntity.ok(courses);
   }
 
   @GetMapping("/{id}")
   @CrossOrigin(origins = "*")
+  @Cacheable(value = "courses", key = "#id")
   public ResponseEntity<Course> findById(@PathVariable Long id) {
     return courseRepository.findById(id)
         .map(ResponseEntity::ok)
@@ -43,6 +50,7 @@ public class CourseController {
 
   @PostMapping
   @CrossOrigin(origins = "*")
+  @CacheEvict(value = "courses", allEntries = true)
   public ResponseEntity<?> create(@RequestBody Course course) {
     if (course.getTitle() == null || course.getTitle().isEmpty()) {
       return ResponseEntity.badRequest().body("Title cannot be null or empty");
@@ -56,6 +64,7 @@ public class CourseController {
 
   @PostMapping("/batch")
   @CrossOrigin(origins = "*")
+  @CacheEvict(value = "courses", allEntries = true)
   public ResponseEntity<?> createBatch(@RequestBody List<Course> courses) {
     if (courses == null || courses.isEmpty()) {
       return ResponseEntity.badRequest().body("Courses list cannot be null or empty");
@@ -77,6 +86,7 @@ public class CourseController {
   @PutMapping("/{id}")
   @CrossOrigin(origins = "*")
   @Transactional
+  @CacheEvict(value = "courses", allEntries = true)
   public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Course course) {
     if (course.getTitle() == null || course.getTitle().isEmpty()) {
       return ResponseEntity.badRequest().body("Title cannot be null or empty");
@@ -101,6 +111,7 @@ public class CourseController {
 
   @DeleteMapping("/{id}")
   @CrossOrigin(origins = "*")
+  @CacheEvict(value = "courses", allEntries = true)
   public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
     return courseRepository.findById(id)
         .map(recordFound -> {

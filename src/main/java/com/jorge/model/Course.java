@@ -8,11 +8,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Index;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "courses")
+@Table(name = "courses", indexes = {
+    @Index(name = "idx_course_title", columnList = "title"),
+    @Index(name = "idx_course_urgency", columnList = "urgency"),
+    @Index(name = "idx_course_price", columnList = "price")
+})
 public class Course {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
