@@ -54,6 +54,26 @@ public class CourseController {
     return ResponseEntity.status(HttpStatus.CREATED).body(savedCourse);
   }
 
+  @PostMapping("/batch")
+  @CrossOrigin(origins = "*")
+  public ResponseEntity<?> createBatch(@RequestBody List<Course> courses) {
+    if (courses == null || courses.isEmpty()) {
+      return ResponseEntity.badRequest().body("Courses list cannot be null or empty");
+    }
+    
+    for (Course course : courses) {
+      if (course.getTitle() == null || course.getTitle().isEmpty()) {
+        return ResponseEntity.badRequest().body("Title cannot be null or empty");
+      }
+      if (course.getPrice() == null) {
+        return ResponseEntity.badRequest().body("Price cannot be null");
+      }
+    }
+    
+    List<Course> savedCourses = courseRepository.saveAll(courses);
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedCourses);
+  }
+
   @PutMapping("/{id}")
   @CrossOrigin(origins = "*")
   @Transactional
